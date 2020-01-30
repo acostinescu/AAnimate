@@ -163,6 +163,5 @@ function scrollToTop(){
 someButton.addEventListener("click", function(){
 	scrollToTop();
 });
-
 ```
 
