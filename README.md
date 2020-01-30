@@ -1,5 +1,7 @@
 # AAnimation.js
 
+Simple native Javascript animations.
+
 ## Example Usage
 
 Initialize with:
