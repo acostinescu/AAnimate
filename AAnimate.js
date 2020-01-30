@@ -11,10 +11,9 @@ window.cancelAnimationFrame = window.cancelAnimationFrame
 class AAnimation {
      constructor(params){
 
-          // Timing function - REQUIRED
+          // Timing function - Default to linear
           if(params.timing == null) {
-               console.error("AAnimate: You must provide a timing function.");
-               return;
+               this.timing = AAnimation.linear;
           }
           else {
                this.timing = params.timing;
@@ -92,10 +91,10 @@ class AAnimation {
      }
 
      _update(timestamp){
-          let timestamp = timestamp || window.performance.now();
-          let runtime = timestamp - this.startstamp;
+          var timestamp = timestamp || window.performance.now();
+          var runtime = timestamp - this.startstamp;
 
-          let time_fraction = runtime / this.duration;
+          var time_fraction = runtime / this.duration;
           time_fraction = Math.min(time_fraction, 1);
      
           // onUpdate
