@@ -21,7 +21,6 @@ Start the animation:
 
 ```
 anim.start();
-
 ```
 
 ## Options
@@ -150,13 +149,13 @@ A simple animation to scroll to the top of the window on a button press would lo
 ```
 function scrollToTop(){
 	var scrollAnim = new AAnimation({
-	    timing: AAnimation.ease,
-	    duration: 750,
-	    start: window.scrollY,
-	    end: 0,
-	    onUpdate: function(new_value){
-	        window.scrollTo(0,new_value);
-	    }
+		timing: AAnimation.ease,
+		duration: 750,
+		start: window.scrollY,
+		end: 0,
+		onUpdate: function(new_value){
+			window.scrollTo(0,new_value);
+		}
 	});
 	scrollAnim();
 }
@@ -164,7 +163,6 @@ function scrollToTop(){
 someButton.addEventListener("click", function(){
 	scrollToTop();
 });
-
 
 ```
 
