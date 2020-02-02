@@ -68,7 +68,7 @@ _Required options are marked with *_
 			<td>The duration of the animation in milliseconds.</td>
 		</tr>
 		<tr>
-			<td>timing*</td>
+			<td>timing</td>
 			<td>function</td>
 			<td>AAnimation.linear</td>
 			<td>The timing function to use for the animation.</td>
