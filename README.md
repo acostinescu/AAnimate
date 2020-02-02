@@ -1,6 +1,6 @@
 # AAnimation.js
 
-Simple native Javascript animations.
+Simple vanilla Javascript animations.
 
 ## Example Usage
 
