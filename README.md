@@ -6,7 +6,7 @@ Simple vanilla Javascript animations.
 
 Initialize with:
 
-```
+```js
 var anim = new AAnimation({
 	start_value: 10,
 	end_value: 100,
@@ -19,7 +19,7 @@ var anim = new AAnimation({
 
 Start the animation:
 
-```
+```js
 anim.start();
 ```
 
@@ -103,7 +103,7 @@ A timing function takes in a time fraction. This is a value from 0 to 1 which me
 
 ### Example:
 
-```
+```js
 function quadraticEaseIn(time_fraction) {
 	return Math.pow(time_fraction, 2);
 }
@@ -117,7 +117,7 @@ AAnimation.js can also animate on multiple values using the `start_values` and `
 
 To animate on two values called top and opacity which start at 100 and 0 and end at 200 and 1, respectively, `start_values` would look like this:
 
-```
+```js
 start_values: {
 	top: 100,
 	opacity: 0
@@ -126,7 +126,7 @@ start_values: {
 
 ...and `end_values` would look like this:
 
-```
+```js
 end_values: {
 	top: 200,
 	opacity: 1
@@ -135,7 +135,7 @@ end_values: {
 
 onUpdate receives these values as a JSON object, and an example onUpdate for these values would look like this:
 
-```
+```js
 onUpdate: function(new_values) {
 	someElem.style.top = new_values.top + "px";
 	someElem.style.opacity = new_values.opacity;
@@ -146,7 +146,7 @@ onUpdate: function(new_values) {
 
 A simple animation to scroll to the top of the window on a button press would look like this:
 
-```
+```js
 function scrollToTop(){
 	var scrollAnim = new AAnimation({
 		timing: AAnimation.ease,
