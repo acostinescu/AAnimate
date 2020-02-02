@@ -157,7 +157,7 @@ function scrollToTop(){
 			window.scrollTo(0,new_value);
 		}
 	});
-	scrollAnim();
+	scrollAnim.start();
 }
 
 someButton.addEventListener("click", function(){
