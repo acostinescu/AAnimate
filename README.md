@@ -2,6 +2,8 @@
 
 Simple vanilla Javascript animations.
 
+<br />
+
 ## Example Usage
 
 Initialize with:
@@ -22,6 +24,8 @@ Start the animation:
 ```js
 anim.start();
 ```
+
+<br />
 
 ## Options
 
@@ -94,6 +98,7 @@ _Required options are marked with *_
 	</tbody>
 </table>
 
+<br />
 
 ## Timing Functions
 
@@ -108,6 +113,8 @@ function quadraticEaseIn(time_fraction) {
 	return Math.pow(time_fraction, 2);
 }
 ```
+
+<br />
 
 ## Animating Multiple Values
 
@@ -142,6 +149,8 @@ onUpdate: function(new_values) {
 }
 ```
 
+<br />
+
 ## Another Example
 
 A simple animation to scroll to the top of the window on a button press would look like this:
@@ -154,7 +163,7 @@ function scrollToTop(){
 		start: window.scrollY,
 		end: 0,
 		onUpdate: function(new_value){
-			window.scrollTo(0,new_value);
+			window.scrollTo(0, new_value);
 		}
 	});
 	scrollAnim.start();
