@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+
+<html lang="en">
+     <head>
+          <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+          <meta charset="UTF-8">
+
+          <title>AAnimation.js Example</title>
+          <link rel="stylesheet" href="styles.css" />
+     </head>
+     <body>
+
+          <section class="aa-section">
+               <div class="section--inner inner__grey">
+                    <h1 class="page-header">AAnimation.js</h1>
+                    <button id="buttonScrollDown" class="aa-button">Click here to scroll down!</button>
+               </div>
+          </section>
+
+          <section class="aa-section">
+               <div class="section--inner inner__tan">
+                    <button id="buttonScrollUp" class="aa-button">And baaack up!</button>
+               </div>
+          </section>
+          
+          <script type="text/javascript" src="../AAnimation.js"></script>
+
+          <script type="text/javascript">
+               var upButton = document.querySelector("#buttonScrollUp");
+               var downButton = document.querySelector("#buttonScrollDown");
+               
+               downButton.addEventListener("click", function(){
+                    var scrollAnim = new AAnimation({
+                         timing: AAnimation.ease,
+                         duration: 750,
+                         start_value: window.scrollY,
+                         end_value: window.outerHeight,
+                         onUpdate: function(new_value){
+                              window.scrollTo(window.scrollX, new_value);
+                         }
+                    });
+                    scrollAnim.start();
+               });
+
+               
+               upButton.addEventListener("click", function(){
+                    var scrollAnim = new AAnimation({
+                         timing: AAnimation.ease,
+                         duration: 750,
+                         start_value: window.scrollY,
+                         end_value: 0,
+                         onUpdate: function(new_value){
+                              window.scrollTo(window.scrollX, new_value);
+                              console.log(new_value);
+                         }
+                    });
+                    scrollAnim.start();
+               });
+          </script>
+     </body>
+</html>

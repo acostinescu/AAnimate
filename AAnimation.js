@@ -19,23 +19,8 @@ class AAnimation {
                this.timing = params.timing;
           }
 
-          // onUpdate function - REQUIRED
-          if(params.onUpdate == null) {
-               console.error("AAnimate: You must provide an update function.");
-               return;
-          }
-          else {
-               this.onUpdate = params.onUpdate;
-          }
-
-          // Duration - REQUIRED
-          if(params.duration == null){
-               console.error("AAnimate: You must provide an animation duration.");
-               return;
-          }
-          else {
-               this.duration = params.duration;
-          }
+          this.onUpdate = params.onUpdate;
+          this.duration = params.duration;
 
           // Start value(s) - Default to 0
           if(params.start_value != null){
@@ -62,13 +47,7 @@ class AAnimation {
                }
           }
           else {
-               if (params.end_values != null && this._checkValueEquality(params.end_values, this.start_values)){
-                    this.end_values = params.end_values;
-               }
-               else {
-                    console.error("AAnimate: You must provide matching end values if you are using multiple start values.");
-                    return;
-               }
+               this.end_values = params.end_values;
           }
 
           // onFinish function
@@ -83,11 +62,41 @@ class AAnimation {
      }
 
      start(){
+          if(!this._verify()){
+               return;
+          }
+
           if(this.onStart != null){
                this.onStart();
           }
           this.startstamp = window.performance.now();
           requestAnimationFrame((timestamp) => this._update(timestamp));
+     }
+
+     _verify(){
+          var valid = true;
+
+          // onUpdate function - REQUIRED
+          if(this.onUpdate == null) {
+               console.error("AAnimate: You must provide an onUpdate function.");
+               valid = false;
+          }
+
+          // Duration - REQUIRED
+          if(this.duration == null){
+               console.error("AAnimate: You must provide an animation duration.");
+               valid = false;
+          }
+
+          // Start and end values must match when animating on multiple values
+          if(!this.is_single_val){
+               if (this.end_values == null || !this._checkValueEquality(this.end_values, this.start_values)){
+                    console.error("AAnimate: You must provide matching end values if you are using multiple start values.");
+                    valid = false;
+               }
+          }
+
+          return valid;
      }
 
      _update(timestamp){

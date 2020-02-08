@@ -160,8 +160,8 @@ function scrollToTop(){
 	var scrollAnim = new AAnimation({
 		timing: AAnimation.ease,
 		duration: 750,
-		start: window.scrollY,
-		end: 0,
+		start_value: window.scrollY,
+		end_value: 0,
 		onUpdate: function(new_value){
 			window.scrollTo(0, new_value);
 		}
