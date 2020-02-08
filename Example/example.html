@@ -29,32 +29,25 @@
                var upButton = document.querySelector("#buttonScrollUp");
                var downButton = document.querySelector("#buttonScrollDown");
                
-               downButton.addEventListener("click", function(){
+               function scrollToLocation(scrollLocation){
                     var scrollAnim = new AAnimation({
                          timing: AAnimation.ease,
                          duration: 750,
                          start_value: window.scrollY,
-                         end_value: window.outerHeight,
+                         end_value: scrollLocation,
                          onUpdate: function(new_value){
                               window.scrollTo(window.scrollX, new_value);
                          }
                     });
                     scrollAnim.start();
-               });
+               }
 
+               downButton.addEventListener("click", function(){
+                    scrollToLocation(window.outerHeight);
+               });
                
                upButton.addEventListener("click", function(){
-                    var scrollAnim = new AAnimation({
-                         timing: AAnimation.ease,
-                         duration: 750,
-                         start_value: window.scrollY,
-                         end_value: 0,
-                         onUpdate: function(new_value){
-                              window.scrollTo(window.scrollX, new_value);
-                              console.log(new_value);
-                         }
-                    });
-                    scrollAnim.start();
+                    scrollToLocation(0);
                });
           </script>
      </body>
