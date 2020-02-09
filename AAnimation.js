@@ -1,33 +1,39 @@
+'use strict';
+
 window.requestAnimationFrame = window.requestAnimationFrame
     || window.mozRequestAnimationFrame
     || window.webkitRequestAnimationFrame
     || window.msRequestAnimationFrame
-    || function(f){return setTimeout(f, 1000/60)} // Fallback - simulate 60fps
+    || function(f){return setTimeout(f, 1000/60)} // Fallback to setTimeout - simulate 60fps
  
 window.cancelAnimationFrame = window.cancelAnimationFrame
     || window.mozCancelAnimationFrame
-    || function(requestID){clearTimeout(requestID)} // Fallback
+    || function(requestID){clearTimeout(requestID)} // Fallback to setTimeout
 
 class AAnimation {
      constructor(params){
 
           // Timing function - Default to linear
-          if(params.timing == null) {
-               this.timing = AAnimation.linear;
-          }
-          else {
+          if(typeof params.timing !== 'undefined') {
                this.timing = params.timing;
           }
+          else {
+               this.timing = AAnimation.linear;
+          }
 
+          // onUpdate function - REQUIRED
           this.onUpdate = params.onUpdate;
+
+          // Animation duration - REQUIRED
           this.duration = params.duration;
 
-          // Start value(s) - Default to 0
-          if(params.start_value != null){
+          // start_value - Default to 0.
+          // If start_values is set, overrides any start_value that is set.
+          if(typeof params.start_value !== 'undefined'){
                this.is_single_val = true;
                this.start_value = params.start_value;
           }
-          else if (params.start_values != null) {
+          else if (typeof params.start_values !== 'undefined') {
                this.is_single_val = false;
                this.start_values = params.start_values;
           }
@@ -36,10 +42,10 @@ class AAnimation {
                this.start_value = 0;
           }
 
-          // End value(s) - Default to 1
-          // If multiple start values are being used, end values must match
+          // end_value - Default to 1
+          // If start_values is set, end_value is ignored and only end_values are used.
           if(this.is_single_val){
-               if(params.end_value != null){
+               if(typeof params.end_value !== 'undefined'){
                     this.end_value = params.end_value;
                }
                else {
@@ -51,47 +57,59 @@ class AAnimation {
           }
 
           // onFinish function
-          if(params.onFinish != null) {
+          if(typeof params.onFinish !== 'undefined') {
                this.onFinish = params.onFinish;
           }
 
           // onStart function
-          if(params.onStart != null) {
+          if(typeof params.onStart !== 'undefined') {
                this.onStart = params.onStart;
           }
      }
 
+     /**
+      * Starts the animation. First checks if required parameters have been set.
+      */
      start(){
+
+          // If verification fails, return
           if(!this._verify()){
                return;
           }
 
-          if(this.onStart != null){
+          // If an onStart function has been defined, call it before starting the animation
+          if(typeof this.onStart !== 'undefined'){
                this.onStart();
           }
+
+          // Set the starting timestamp and start the animation
           this.startstamp = window.performance.now();
           requestAnimationFrame((timestamp) => this._update(timestamp));
      }
 
+     /**
+      * Verifies that all required parameters have been set and have valid values.
+      * @returns true if all parameters have been set and are valid, false otherwise.
+      */
      _verify(){
           var valid = true;
 
           // onUpdate function - REQUIRED
-          if(this.onUpdate == null) {
-               console.error("AAnimate: You must provide an onUpdate function.");
+          if(typeof this.onUpdate === 'undefined') {
+               console.error('AAnimate: You must provide an onUpdate function.');
                valid = false;
           }
 
           // Duration - REQUIRED
-          if(this.duration == null){
-               console.error("AAnimate: You must provide an animation duration.");
+          if(typeof this.duration === 'undefined'){
+               console.error('AAnimate: You must provide an animation duration.');
                valid = false;
           }
 
           // Start and end values must match when animating on multiple values
           if(!this.is_single_val){
-               if (this.end_values == null || !this._checkValueEquality(this.end_values, this.start_values)){
-                    console.error("AAnimate: You must provide matching end values if you are using multiple start values.");
+               if (typeof this.end_values === 'undefined' || !this._checkKeyEquality(this.end_values, this.start_values)){
+                    console.error('AAnimate: You must provide matching end values if you are using multiple start values.');
                     valid = false;
                }
           }
@@ -99,6 +117,10 @@ class AAnimation {
           return valid;
      }
 
+     /**
+      * Advances a frame in the animation. Calls itself until the animation has completed.
+      * @param {Number} timestamp the timestamp of the frame.
+      */
      _update(timestamp){
           var timestamp = timestamp || window.performance.now();
           var runtime = timestamp - this.startstamp;
@@ -123,16 +145,21 @@ class AAnimation {
           if(time_fraction == 1) {
                
                // onFinish
-               if(this.onFinish != null){
+               if(typeof this.onFinish !== 'undefined'){
                     this.onFinish();
                }
 
                return;
           }
           
+          // Queue up the next animation frame
           requestAnimationFrame((timestamp) => this._update(timestamp));
      }
 
+     /**
+      * Quartic ease in-out timing function
+      * @param {Number} time_fraction a number from 0 - 1. How far the animation has progressed in time.
+      */
      static ease(time_fraction) {
           if(time_fraction < 0.5) {
                return Math.pow(time_fraction, 3) * 4;
@@ -143,22 +170,40 @@ class AAnimation {
           }
      }
 
+     /**
+      * Quartic ease in timing function
+      * @param {Number} time_fraction a number from 0 - 1. How far the animation has progressed in time.
+      */
      static easein(time_fraction) {
           return Math.pow(time_fraction, 3);
      }
      
+     /**
+      * Quartic ease out timing function
+      * @param {Number} time_fraction a number from 0 - 1. How far the animation has progressed in time.
+      */
      static easeout(time_fraction) {
           return 1 - Math.pow(time_fraction, 3);
      }
      
+     /**
+      * Linear timing function
+      * @param {Number} time_fraction a number from 0 - 1. How far the animation has progressed in time.
+      */
      static linear(time_fraction) {
           return time_fraction;
      }
 
-     _checkValueEquality(start_values, end_values){
+     /**
+      * Checks if the key sets for two JSON objects match.
+      * @param {Object} obj1 The first object to compare.
+      * @param {Object} obj2 The second object to compare.
+      * @returns true if the objects have the same key sets, false otherwise.
+      */
+     _checkKeyEquality(obj1, obj2){
 
-          let start_keys = Object.keys(start_values);
-          let end_keys = Object.keys(end_values);
+          let start_keys = Object.keys(obj1);
+          let end_keys = Object.keys(obj2);
           
           if(start_keys === end_keys){
                return true;
